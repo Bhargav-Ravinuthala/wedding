@@ -5,22 +5,22 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width" name="viewport"/>
 <meta content="Framer ca8ceca" name="generator"/>
-<title>Bhargav weds Bhargavi</title>
-<meta content="Create a beautiful wedding invite that opens as a website. Edit anytime and share instantly on WhatsApp. Modern, simple, and made for every ceremony." name="description"/>
+<title>Bhargav & Bhargavi — Wedding Invitation</title>
+<meta content="Join us on Sunday, 23 August 2026 · Sri Lakshmi Grand Convention, Anakapalle." name="description"/>
 <meta content="js/searchIndex-1wjgMUgLqYtB.json" name="framer-search-index"/>
 <meta content="js/searchIndex-gegSv5WPZu7T.json" name="framer-search-index-fallback"/>
 <meta content="disable" name="framer-html-plugin"/>
 <link href="images/VRr5oPbK8EC2e8xlsQcVIsS47c.png" media="(prefers-color-scheme: light)" rel="icon"/>
 <link href="images/vqNg8mNroPNlpAOMAK02feK2gc.png" media="(prefers-color-scheme: dark)" rel="icon"/>
 <link href="images/crQk5UzfRd9W9n54FdrUY2WUTU.png" rel="apple-touch-icon"/>
-<meta content="website" property="og:type"/>
-<meta content="Bhargav weds Bhargavi" property="og:title"/>
-<meta content="Create a beautiful wedding invite that opens as a website. Edit anytime and share instantly on WhatsApp. Modern, simple, and made for every ceremony." property="og:description"/>
-<meta content="images/7LPUQldg1w5B1Zrz0pCfh0AeQw.png" property="og:image"/>
+<meta content="website" property="og:type"/><meta content="https://bhargav-ravinuthala.github.io/wedding/" property="og:url"/><meta content="Bhargav & Bhargavi Wedding" property="og:site_name"/><meta content="1200" property="og:image:width"/><meta content="1200" property="og:image:height"/><meta content="image/png" property="og:image:type"/>
+<meta content="Bhargav & Bhargavi — Wedding Invitation" property="og:title"/>
+<meta content="Join us on Sunday, 23 August 2026 · Sri Lakshmi Grand Convention, Anakapalle." property="og:description"/>
+<meta content="https://bhargav-ravinuthala.github.io/wedding/images/photo1.png" property="og:image"/>
 <meta content="summary_large_image" name="twitter:card"/>
-<meta content="Bhargav weds Bhargavi" name="twitter:title"/>
-<meta content="Create a beautiful wedding invite that opens as a website. Edit anytime and share instantly on WhatsApp. Modern, simple, and made for every ceremony." name="twitter:description"/>
-<meta content="images/7LPUQldg1w5B1Zrz0pCfh0AeQw.png" name="twitter:image"/>
+<meta content="Bhargav & Bhargavi — Wedding Invitation" name="twitter:title"/>
+<meta content="Join us on Sunday, 23 August 2026 · Sri Lakshmi Grand Convention, Anakapalle." name="twitter:description"/>
+<meta content="https://bhargav-ravinuthala.github.io/wedding/images/photo1.png" name="twitter:image"/>
 <style data-framer-font-css="">/* cyrillic-ext */
 @font-face {
   font-family: 'Cormorant';
@@ -723,24 +723,50 @@
 <!-- End of bodyEnd -->
 <script id="force-music-autoplay">
 (function(){
-  function start(){
+  var started = false;
+  function playAll(){
     document.querySelectorAll('audio').forEach(function(a){
-      try { a.muted = false; a.play().catch(function(){}); } catch(e){}
-    });
-    ['click','touchstart','keydown','scroll'].forEach(function(ev){
-      window.removeEventListener(ev, start, true);
+      try {
+        a.muted = false; a.volume = 1;
+        var p = a.play();
+        if (p && typeof p.then === 'function') {
+          p.then(function(){ started = true; }).catch(function(){});
+        }
+      } catch(e){}
     });
   }
-  // Try immediately (works if browser allows)
-  window.addEventListener('DOMContentLoaded', function(){
-    document.querySelectorAll('audio').forEach(function(a){
-      a.play().catch(function(){});
-    });
-  });
-  // Fallback: start on first user interaction
-  ['click','touchstart','keydown','scroll'].forEach(function(ev){
-    window.addEventListener(ev, start, true);
-  });
+  function tryPlay(){
+    playAll();
+    if (!started) {
+      setTimeout(playAll, 300);
+      setTimeout(playAll, 1200);
+      setTimeout(playAll, 3000);
+    }
+  }
+  if (document.readyState !== 'loading') tryPlay();
+  else document.addEventListener('DOMContentLoaded', tryPlay);
+  window.addEventListener('load', tryPlay);
+
+  var evs = ['click','touchstart','touchend','touchmove','keydown','wheel',
+             'scroll','mousemove','mousedown','pointerdown','pointermove'];
+  function onGesture(){
+    playAll();
+    if (started) evs.forEach(function(ev){ window.removeEventListener(ev, onGesture, true); });
+  }
+  evs.forEach(function(ev){ window.addEventListener(ev, onGesture, {capture: true, passive: true}); });
+
+  if (typeof MutationObserver !== 'undefined') {
+    new MutationObserver(function(muts){
+      for (var i=0; i<muts.length; i++) {
+        for (var j=0; j<muts[i].addedNodes.length; j++) {
+          var n = muts[i].addedNodes[j];
+          if (n.tagName === 'AUDIO' || (n.querySelectorAll && n.querySelectorAll('audio').length)) {
+            playAll(); return;
+          }
+        }
+      }
+    }).observe(document.documentElement, {childList: true, subtree: true});
+  }
 })();
 </script>
 </body>
