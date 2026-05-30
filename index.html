@@ -714,7 +714,14 @@
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   color: transparent !important;
-  animation: goldShimmer 4s linear infinite, heroGlowPulse 5s ease-in-out infinite !important;
+  display: inline-block !important;
+  padding: 0.1em 0.05em 0.2em 0.05em !important;
+  line-height: 1.25 !important;
+  animation: goldShimmer 4s linear infinite !important;
+}
+/* Also remove the text-shadow heroGlowPulse animation here — text-shadow doesn't work with -webkit-text-fill-color:transparent so it was wasted; instead use drop-shadow filter for the glow */
+.framer-11ag0sw, .framer-13k4cyv {
+  filter: drop-shadow(0 0 12px rgba(220, 175, 90, 0.45));
 }
 @keyframes goldShimmer {
   from { background-position: 0% center; }
@@ -723,13 +730,13 @@
 
 /* ===== Floating location pin button ===== */
 #venue-map-btn {
-  position: fixed; right: 20px; top: 110px;
+  position: fixed; right: 20px; top: 50%;   /* fallback if JS fails to position */
   width: 56px; height: 56px;
   background: rgb(207, 47, 42); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   z-index: 9999; text-decoration: none;
   box-shadow: 0 4px 14px rgba(0,0,0,0.35);
-  transition: transform .2s ease, box-shadow .2s ease;
+  transition: transform .2s ease, box-shadow .2s ease, top .25s ease;
   animation: pinPulse 2.2s ease-in-out infinite;
 }
 #venue-map-btn:hover { transform: scale(1.10); box-shadow: 0 6px 22px rgba(0,0,0,0.45); }
@@ -748,7 +755,7 @@
   70%      { box-shadow: 0 4px 14px rgba(0,0,0,.35), 0 0 0 14px rgba(207,47,42,0); }
 }
 @media (max-width: 809px) {
-  #venue-map-btn { width: 48px; height: 48px; right: 14px; top: 90px; }
+  #venue-map-btn { width: 48px; height: 48px; right: 14px; }
   #venue-map-btn svg { width: 24px; height: 24px; }
 }
 </style>
@@ -845,5 +852,44 @@
   <span class="tip">Get directions to venue</span>
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>
 </a>
+<script id="position-venue-pin">
+(function(){
+  function position(){
+    var pin = document.getElementById('venue-map-btn');
+    if (!pin) return;
+    // Find the audio play button. Framer uses a <div> with class "framer-audio" wrapper
+    // or the <audio> element inside a styled container.
+    var audio = document.querySelector('audio.framer-audio') || document.querySelector('audio');
+    if (!audio) return;
+    // Walk up to find a visible positioned ancestor (the red circle button container)
+    var el = audio.parentElement;
+    var rect = null;
+    while (el && el !== document.body) {
+      var r = el.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0 && r.width < window.innerWidth) {
+        rect = r; break;
+      }
+      el = el.parentElement;
+    }
+    if (!rect) rect = audio.getBoundingClientRect();
+    if (rect && rect.height > 0) {
+      var gap = 12;
+      pin.style.top = (rect.bottom + window.scrollY + gap) + 'px';
+      pin.style.right = Math.max(20, window.innerWidth - rect.right) + 'px';
+    }
+  }
+  function init(){
+    position();
+    setTimeout(position, 300);
+    setTimeout(position, 1200);
+    setTimeout(position, 3000);
+    window.addEventListener('resize', position);
+    window.addEventListener('scroll', position, {passive: true});
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+  window.addEventListener('load', position);
+})();
+</script>
 </body>
 </html>
