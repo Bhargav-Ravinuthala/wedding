@@ -679,6 +679,78 @@
 .framer-1oamzkx-container,
 .framer-fpqfdb-container,
 .framer-h1jz8-container { display: none !important; }
+
+
+/* ===== Boost the pale wedding-card text (date / venue / time / Wedding) ===== */
+.framer-d9o4fp p,
+.framer-inj5oz p,
+.framer-1lwecf7 p,
+.framer-g4ggot p {
+  color: rgb(40, 90, 70) !important;
+  font-weight: 700 !important;
+  text-shadow:
+    0 1px 0 rgba(255, 240, 200, 0.6),
+    0 0 8px rgba(220, 175, 90, 0.25);
+}
+.framer-d9o4fp p {
+  color: rgb(160, 95, 25) !important;
+  font-weight: 700 !important;
+  text-shadow:
+    0 1px 0 rgba(255, 240, 200, 0.8),
+    0 0 14px rgba(220, 175, 90, 0.45);
+}
+
+/* ===== Gold-gradient highlight on mid-page stacked names ===== */
+.framer-11ag0sw p,
+.framer-13k4cyv p {
+  background: linear-gradient(90deg,
+    rgb(178, 110, 30) 0%,
+    rgb(235, 195, 100) 35%,
+    rgb(255, 230, 160) 50%,
+    rgb(235, 195, 100) 65%,
+    rgb(178, 110, 30) 100%) !important;
+  background-size: 200% auto !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  animation: goldShimmer 4s linear infinite, heroGlowPulse 5s ease-in-out infinite !important;
+}
+@keyframes goldShimmer {
+  from { background-position: 0% center; }
+  to   { background-position: 200% center; }
+}
+
+/* ===== Floating location pin button ===== */
+#venue-map-btn {
+  position: fixed; right: 20px; top: 110px;
+  width: 56px; height: 56px;
+  background: rgb(207, 47, 42); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999; text-decoration: none;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+  transition: transform .2s ease, box-shadow .2s ease;
+  animation: pinPulse 2.2s ease-in-out infinite;
+}
+#venue-map-btn:hover { transform: scale(1.10); box-shadow: 0 6px 22px rgba(0,0,0,0.45); }
+#venue-map-btn svg { width: 28px; height: 28px; fill: #fff; }
+#venue-map-btn .tip {
+  position: absolute; right: 66px; top: 50%; transform: translateY(-50%);
+  background: rgba(0,0,0,0.78); color: #fff;
+  padding: 6px 10px; border-radius: 6px;
+  font: 12px/1.2 system-ui, -apple-system, sans-serif;
+  white-space: nowrap; opacity: 0; pointer-events: none;
+  transition: opacity .18s ease;
+}
+#venue-map-btn:hover .tip { opacity: 1; }
+@keyframes pinPulse {
+  0%, 100% { box-shadow: 0 4px 14px rgba(0,0,0,.35), 0 0 0 0 rgba(207,47,42,.55); }
+  70%      { box-shadow: 0 4px 14px rgba(0,0,0,.35), 0 0 0 14px rgba(207,47,42,0); }
+}
+@media (max-width: 809px) {
+  #venue-map-btn { width: 48px; height: 48px; right: 14px; top: 90px; }
+  #venue-map-btn svg { width: 24px; height: 24px; }
+}
 </style>
 </head>
 <body>
@@ -769,5 +841,9 @@
   }
 })();
 </script>
+<a id="venue-map-btn" href="https://www.google.com/maps/dir/?api=1&destination=Sri+Lakshmi+Grand+Convention%2C+Anakapalle&travelmode=driving" target="_blank" rel="noopener" aria-label="Navigate to venue on Google Maps">
+  <span class="tip">Get directions to venue</span>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>
+</a>
 </body>
 </html>
